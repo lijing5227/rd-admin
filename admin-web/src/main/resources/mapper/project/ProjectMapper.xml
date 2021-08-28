@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.noriental.modules.project.mapper.ProjectMapper">
+
+    <resultMap id="projectMap" type="com.noriental.modules.project.entity.ProjectEntity">
+        <id property="id" column="id"/>
+        <result property="projectName" column="project_name"/>
+        <result property="projectLevel" column="project_level"/>
+        <result property="projectLeader" column="project_leader"/>
+        <result property="projectProcess" column="project_process"/>
+        <result property="projectState" column="project_state"/>
+        <result property="projectLanchTime" column="project_lanch_time"/>
+        <result property="projectDeveloper" column="project_developer"/>
+        <result property="rdLeader" column="rd_leader"/>
+        <result property="pmLeader" column="pm_leader"/>
+        <result property="developStartTime" column="develop_start_time"/>
+        <result property="developEndTime" column="develop_end_time"/>
+        <result property="debugStartTime" column="debug_start_time"/>
+        <result property="debugEndTime" column="debug_end_time"/>
+        <result property="testStartTime" column="test_start_time"/>
+        <result property="testEndTime" column="test_end_time"/>
+        <result property="projectStartTime" column="project_start_time"/>
+        <result property="projectEndTime" column="project_end_time"/>
+        <result property="remarks" column="remarks"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+</mapper>

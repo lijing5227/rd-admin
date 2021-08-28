@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="${package}.${moduleName}.mapper.${caseClassName}Mapper">
+
+    <!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="${package}.${moduleName}.entity.${caseClassName}" id="${lowerClassName}Map">
+        #foreach($column in $columns)
+            <result property="${column.lowerAttrName}" column="${column.columnName}"/>
+        #end
+    </resultMap>
+
+    <sql id="Base_Column_List">
+            #foreach($column in $columns)
+                #if($velocityCount != $columns.size())${column.columnName},#else${column.columnName}#end
+            #end
+    </sql>
+
+    <update id="update" parameterType="${package}.${moduleName}.entity.${caseClassName}">
+        update ${tableName}
+        <set>
+            #foreach($column in $columns)
+                <if test="${column.lowerAttrName}!=null">
+                    ${column.columnName}=#{${column.lowerAttrName}},
+                </if>
+            #end
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateList" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update ${tableName}
+            <set>
+                #foreach($column in $columns)
+                    <if test="item.${column.lowerAttrName}!=null">
+                        ${column.columnName}=#{item.${column.lowerAttrName}},
+                    </if>
+                #end
+            </set>
+            where id = #{item.id}
+        </foreach>
+    </update>
+
+    <insert id="insertSetId" parameterType="${package}.${moduleName}.entity.${caseClassName}" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into
+            ${tableName}(
+            #foreach($column in $columns)
+                #if($velocityCount != $columns.size())${column.columnName},#else${column.columnName}
+#end
+            #end
+        )values(
+            #foreach($column in $columns)
+                #if($velocityCount != $columns.size())#{${column.lowerAttrName}},#else#{${column.lowerAttrName}}
+#end
+            #end )
+    </insert>
+
+    <insert id="insert" parameterType="${package}.${moduleName}.entity.${caseClassName}">
+        insert into
+            ${tableName}(
+            #foreach($column in $columns)
+                #if($velocityCount != $columns.size())${column.columnName},#else${column.columnName}#end
+            #end
+        )values(
+            #foreach($column in $columns)
+                #if($velocityCount != $columns.size())#{${column.lowerAttrName}},#else #{${column.lowerAttrName}}#end
+            #end )
+    </insert>
+
+    <insert id="insertList" parameterType="java.util.List">
+        insert into
+        ${tableName}(
+        #foreach($column in $columns)
+            #if($velocityCount != $columns.size())${column.columnName},#else${column.columnName}#end#end) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#foreach($column in $columns)
+            #if($velocityCount != $columns.size())#{item.${column.lowerAttrName}},#else#{iteam.$column.lowerAttrName
+                }#end#end)
+        </foreach>
+    </insert>
+
+    <insert id="insertSelective" parameterType="${package}.${moduleName}.entity.${caseClassName}">
+        insert into ${tableName}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #foreach($column in $columns)
+                <if test="${column.lowerAttrName}!=null">
+                    ${column.columnName},
+                </if>
+            #end
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            #foreach($column in $columns)
+                <if test="${column.lowerAttrName}!=null">
+                    #{${column.lowerAttrName}},
+                </if>
+            #end
+        </trim>
+    </insert>
+
+    <delete id="delete" parameterType="long">
+        delete
+        from ${tableName} where id = #{id}
+    </delete>
+
+    <delete id="deleteByIds" parameterType="long">
+        delete from ${tableName} where id in
+        <foreach collection="ids" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByParam" parameterType="${package}.${moduleName}.entity.${caseClassName}">
+        delete from ${tableName}
+        <where>
+            #foreach($column in $columns)
+                #if($velocityCount < 6 && $velocityCount > 1)
+                    <if test="${column.lowerAttrName}!=null">
+                        and ${column.columnName}=#{${column.lowerAttrName}},
+                    </if>
+                #end
+            #end
+            <if test="ids!=null and ids.size()>0">
+                and id in
+                <foreach collection="ids" item="item"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </delete>
+
+    <select id="load" resultType="${package}.${moduleName}.entity.${caseClassName}" parameterType="long">
+        select
+        <include refid="Base_Column_List"/>
+        from ${tableName} where id=#{id}
+    </select>
+
+    <select id="loadByParam" resultType="${package}.${moduleName}.entity.${caseClassName}"
+            parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List"/>
+        from ${tableName}
+        <where>
+            #foreach($column in $columns)
+                #if($velocityCount < 6 && $velocityCount > 1)
+                    <if test="${column.lowerAttrName}!=null">
+                        and ${column.columnName}=#{${column.lowerAttrName}},
+                    </if>
+                #end
+            #end
+         <if test="ids!=null and ids.size()>0">
+             and id in
+             <foreach collection="ids" item="item"
+                      open="(" separator="," close=")">
+                 #{item}
+             </foreach>
+         </if>
+        </where>
+        limit 0,1
+    </select>
+
+    <select id="list" resultType="${package}.${moduleName}.entity.${caseClassName}">
+        select
+        <include refid="Base_Column_List"/>
+        from ${tableName}
+    </select>
+
+    <select id="listByParam" resultType="${package}.${moduleName}.entity.${caseClassName}"
+            parameterType="${package}.${moduleName}.entity.${caseClassName}Entity">
+        select
+        <include refid="Base_Column_List"/>
+        from ${tableName}
+        <where>
+            #foreach($column in $columns)
+                #if($velocityCount < 20 && $velocityCount > 1)
+                    <if test="${column.lowerAttrName}!=null">
+                        and ${column.columnName}=#{${column.lowerAttrName}},
+                    </if>
+                #end
+            #end
+            <if test="ids!=null and ids.size()>0">
+                and id in
+                <foreach collection="ids" item="item"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <select id="find" resultType="${package}.${moduleName}.entity.${caseClassName}"
+            parameterType="${package}.${moduleName}.entity.${caseClassName}PageEntity">
+        select
+        <include refid="Base_Column_List"/>
+        from ${tableName}
+        <where>
+            #foreach($column in $columns)
+                #if($velocityCount < 20 && $velocityCount > 1)
+                    <if test="${column.lowerAttrName}!=null">
+                        and ${column.columnName}=#{${column.lowerAttrName}},
+                    </if>
+                #end
+            #end
+            <if test="ids!=null and ids.size()>0">
+                and id in
+                <foreach collection="ids" item="item"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        <if test="sort!= null">
+            order by ${sort}
+            <if test="order!= null">${order}</if>
+        </if>
+        <if test="currPage!= null and pageSize!=null">limit #{currPage - 1} * #{pageSize},#{pageSize}</if>
+    </select>
+
+    <select id="findCount" resultType="int" parameterType="java.util.Map">
+        select count(*) from ${tableName}
+        <where>
+#foreach($column in $columns)
+    #if($velocityCount < 20 && $velocityCount > 1)
+        <if test="${column.lowerAttrName}!=null">
+            and ${column.columnName}=#{${column.lowerAttrName}},
+        </if>
+    #end
+#end
+            <if test="ids!=null and ids.size()>0">
+                and id in
+                <foreach collection="ids" item="item"
+                         open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+</mapper>

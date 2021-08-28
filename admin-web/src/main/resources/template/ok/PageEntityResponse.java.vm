@@ -1,0 +1,41 @@
+package ${package}.${moduleName}.bean.response;
+
+import lombok.Data;
+
+import java.util.List;
+
+/**
+ * ${comments} 分页响应出参
+ *
+ * @author ${author}
+ * @date ${datetime}
+ * @notice 提供此类用于项目封装参考
+ */
+@Data
+public class PageEntityResponse<T> implements Serializable {
+    private static final long serialVersionUID = 1L;
+    private List<T> list;
+    private Integer pageSize;
+    private Integer totalCount;
+    private Integer page;
+    private Integer totalPage;
+
+    public PageEntityResponse() {
+    }
+
+    /**
+     * 分页
+     *
+     * @param list       列表数据
+     * @param totalCount 总记录数
+     * @param pageSize   每页记录数
+     * @param currPage   当前页数
+     */
+    public PageEntityResponse(List<T> list, int totalCount, int pageSize, int currPage) {
+        this.list = list;
+        this.totalCount = totalCount;
+        this.pageSize = pageSize;
+        this.page = currPage;
+        this.totalPage = (int) Math.ceil((double) totalCount / pageSize);
+    }
+}

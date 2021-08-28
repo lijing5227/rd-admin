@@ -1,0 +1,63 @@
+package ${package}.${moduleName}.service;
+
+
+import com.noriental.user.center.api.module.common.PageEntityRequest;
+import com.noriental.user.center.api.module.common.PageEntityResponse;
+import com.noriental.validate.bean.CommonResponse;
+import ${package}.${moduleName}.bean.request.${caseClassName}BaseRequest;
+import ${package}.${moduleName}.bean.response.${caseClassName}BaseResponse;
+import java.util.List;
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+public interface ${caseClassName}Service {
+    /**
+     * 分页列表查询
+     *
+     * @param pageRequest
+     * @return
+     */
+    CommonResponse<PageEntityResponse<${caseClassName}BaseResponse>> pageList(PageEntityRequest<${caseClassName}BaseRequest> pageRequest);
+
+    /**
+     * 保存
+     *
+     * @param request
+     * @return
+     */
+    CommonResponse<Boolean> save(${caseClassName}BaseRequest request);
+
+    /**
+     * 批量保存
+     *
+     * @param request
+     * @return
+     */
+    CommonResponse<Boolean> batchSave(List<${caseClassName}BaseRequest> request);
+
+    /**
+     * 删除
+     * @param request
+     * @return
+     */
+    CommonResponse<Boolean> delete(${caseClassName}BaseRequest request);
+
+    /**
+     * 更新
+     * @param request
+     * @return
+     */
+    CommonResponse<Boolean> update(${caseClassName}BaseRequest request);
+
+    /**
+     * 查找
+     * @param request
+     * @return
+     */
+    CommonResponse<List<${caseClassName}BaseResponse>> find(${caseClassName}BaseRequest request);
+}
+

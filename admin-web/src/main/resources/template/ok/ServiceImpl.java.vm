@@ -1,0 +1,227 @@
+package ${package}.${moduleName}.service.impl;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.util.ObjectUtils;
+import com.noriental.user.center.util.EntityValidatorUtil;
+import com.noriental.user.center.bean.exception.UserCenterException;
+import com.noriental.user.center.bean.response.result.UserCenterErrorCodes;
+import com.noriental.user.center.api.module.common.PageEntityRequest;
+import com.noriental.user.center.api.module.common.PageEntityResponse;
+import com.noriental.validate.bean.CommonResponse;
+import ${package}.${moduleName}.bean.request.${caseClassName}BaseRequest;
+import ${package}.${moduleName}.bean.response.${caseClassName}BaseResponse;
+import ${package}.${moduleName}.mapper.${caseClassName}Mapper;
+import ${package}.${moduleName}.entity.${caseClassName}PageEntity;
+import ${package}.${moduleName}.entity.${caseClassName};
+import ${package}.${moduleName}.service.${caseClassName}Service;
+
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Service
+@Slf4j
+public class ${caseClassName}ServiceImpl implements ${caseClassName}Service {
+    @Autowired
+    private ${caseClassName}Mapper ${lowerClassName}Mapper;
+
+    /**
+     * 1.参数校验
+     * 2.参数封装
+     * 3.查询返回
+     *
+     * @param pageEntityRequest
+     * @return
+     */
+    @Override
+    public CommonResponse<PageEntityResponse<${caseClassName}BaseResponse>> pageList(PageEntityRequest<${caseClassName}BaseRequest> pageEntityRequest) {
+        // 1
+            ${caseClassName}BaseRequest ${lowerClassName}BaseRequest = pageEntityRequest.getParams();
+        EntityValidatorUtil.validateEntity(${lowerClassName}BaseRequest);
+            ${caseClassName}PageEntity ${lowerClassName}PageEntity = new ${caseClassName}PageEntity();
+        int pageNo = pageEntityRequest.getPageNo() == 0 ? 1 : pageEntityRequest.getPageNo();
+        int pageSize = pageEntityRequest.getPageSize() == 0 ? 50 : pageEntityRequest.getPageSize();
+        // 2
+        BeanUtils.copyProperties(${lowerClassName}BaseRequest, ${lowerClassName}PageEntity);
+            ${lowerClassName}PageEntity.setCurrPage(pageNo);
+            ${lowerClassName}PageEntity.setPageSize(pageSize);
+        int count = ${lowerClassName}Mapper.findCount(${lowerClassName}PageEntity);
+        if (count < 1) {
+            return CommonResponse.success(new PageEntityResponse<>());
+        }
+        // 3
+        List<${caseClassName}> ${lowerClassName}List = ${lowerClassName}Mapper.find(${lowerClassName}PageEntity);
+        List<${caseClassName}BaseResponse> baseResponseList = new ArrayList<>();
+            ${lowerClassName}List.forEach(item -> {
+                ${caseClassName}BaseResponse baseResponse = new ${caseClassName}BaseResponse();
+            BeanUtils.copyProperties(item, baseResponse);
+            baseResponseList.add(baseResponse);
+        });
+        PageEntityResponse<${caseClassName}BaseResponse> pageEntityResponse = new PageEntityResponse(baseResponseList, count, pageNo, pageSize);
+        return CommonResponse.success(pageEntityResponse);
+    }
+
+    /**
+     * 1.参数校验
+     * 2.参数封装
+     * 3.保存
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public CommonResponse<Boolean> save(${caseClassName}BaseRequest request) {
+        // 1
+        EntityValidatorUtil.validateEntity(request);
+        ${caseClassName} ${lowerClassName} =new ${caseClassName}();
+        // 2
+        if (request.getCreateTime() == null) {
+            ${lowerClassName}.setCreateTime(new Date());
+        }
+        BeanUtils.copyProperties(request, ${lowerClassName});
+        // 3
+        return CommonResponse.success(${lowerClassName}Mapper.insert(${lowerClassName}) > 0);
+    }
+
+    /**
+    * 1.参数校验
+    * 2.参数封装
+    * 3.查询返回
+    *
+    * @param request
+    * @return
+    */
+    @Override
+    public CommonResponse<Boolean> batchSave(List<${caseClassName}BaseRequest> request) {
+        // 1
+        if (CollectionUtils.isEmpty(request)) {
+            return CommonResponse.success(Boolean.TRUE);
+        }
+        // 2
+        List<${caseClassName}> ${lowerClassName}List = new ArrayList<>();
+        request.forEach(item -> {
+            EntityValidatorUtil.validateEntity(item);
+            ${caseClassName} ${lowerClassName} =new ${caseClassName}();
+            if (item.getCreateTime() == null) {
+                ${lowerClassName}.setCreateTime(new Date());
+            }
+            BeanUtils.copyProperties(item, ${lowerClassName});
+                ${lowerClassName}List.add(${lowerClassName});
+        });
+
+        // 3
+        return CommonResponse.success(${lowerClassName}Mapper.insertList(${lowerClassName}List) > 0);
+    }
+
+    /**
+     * 1.如果什么都不传，直接返回
+     * 2.参数校验
+     * 3.删除
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public CommonResponse<Boolean> delete(${caseClassName}BaseRequest request) {
+        // 1
+        if (ObjectUtils.isEmpty(request)) {
+            return CommonResponse.success(Boolean.TRUE);
+        }
+        // 2
+        EntityValidatorUtil.validateEntity(request);
+        ${caseClassName} ${lowerClassName} =new ${caseClassName}();
+        BeanUtils.copyProperties(request, ${lowerClassName});
+        // 3
+        if (!CollectionUtils.isEmpty(request.getIds())) {
+            List<Long> ids = request.getIds();
+            return CommonResponse.success(${lowerClassName}Mapper.deleteByIds(ids) > 0);
+        }
+        return CommonResponse.success(${lowerClassName}Mapper.delete(${lowerClassName}) > 0);
+    }
+
+    /**
+     * 1.基本参数校验
+     * 2.校验id不存在时数据并设置id
+     * 3.更新
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public CommonResponse<Boolean> update(${caseClassName}BaseRequest request) {
+        // 1
+        EntityValidatorUtil.validateEntity(request);
+        ${caseClassName} ${lowerClassName} =new ${caseClassName}();
+        BeanUtils.copyProperties(request, ${lowerClassName});
+        // 2
+        checkAndHandlePrimaryId(${lowerClassName});
+        // 3
+        return CommonResponse.success(${lowerClassName}Mapper.update(${lowerClassName}) > 0);
+    }
+
+    /**
+     * 更新基本参数校验并组装主键id
+     *
+     * @param ${lowerClassName}
+     */
+    public void checkAndHandlePrimaryId(${caseClassName} ${lowerClassName}) {
+        if (${lowerClassName}.getId() == null){
+                ${caseClassName}PageEntity ${lowerClassName}PageEntity = new ${caseClassName}PageEntity();
+            List<${caseClassName}> findList = ${lowerClassName}Mapper.find(${lowerClassName}PageEntity);
+            final int size = 1;
+            if (findList.size() > size) {
+                throw new UserCenterException(UserCenterErrorCodes.F_PARAM_ERROR.getCode(), "入参异常：查询结果不唯一");
+            }
+            ${caseClassName} exsistEntity = findList.get(0);
+            Long id = exsistEntity.getId();
+            ${lowerClassName}.setId(id);
+        }
+    }
+
+    /**
+     * 1.如果什么都不传，直接返回
+     * 2.参数校验
+     * 3.查询
+     * 4.其它逻辑处理
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public CommonResponse<List<${caseClassName}BaseResponse>> find(${caseClassName}BaseRequest request) {
+        // 1
+        if (ObjectUtils.isEmpty(request)) {
+            return CommonResponse.success(new ArrayList<>(0));
+        }
+        // 2
+        EntityValidatorUtil.validateEntity(request);
+            ${caseClassName}PageEntity ${lowerClassName}PageEntity = new ${caseClassName}PageEntity();
+        BeanUtils.copyProperties(request, ${lowerClassName}PageEntity);
+        // 3
+        List<${caseClassName}> ${caseClassName}List = ${lowerClassName}Mapper.find(${lowerClassName}PageEntity);
+        if (CollectionUtils.isEmpty(${caseClassName}List)) {
+            return CommonResponse.success(new ArrayList<>(0));
+        }
+        List<${caseClassName}BaseResponse> responseList = new ArrayList<>();
+            ${caseClassName}List.forEach(item -> {
+                ${caseClassName}BaseResponse ${lowerClassName}BaseResponse = new ${caseClassName}BaseResponse（）；
+            BeanUtils.copyProperties(item, ${lowerClassName}BaseResponse);
+            responseList.add(${lowerClassName}BaseResponse);
+        });
+        // 4
+        return CommonResponse.success(responseList);
+    }
+
+}

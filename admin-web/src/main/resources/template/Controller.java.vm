@@ -1,0 +1,83 @@
+package ${package}.${moduleName}.controller;
+
+import java.util.Arrays;
+import java.util.Map;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import ${package}.${moduleName}.entity.${caseClassName}Entity;
+import ${package}.${moduleName}.service.${caseClassName}Service;
+import ${mainPath}.common.utils.PageResult;
+import ${mainPath}.common.utils.R;
+
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@RestController
+@RequestMapping("${moduleName}/${pathName}")
+public class ${caseClassName}Controller {
+    @Autowired
+    private ${caseClassName}Service ${lowerClassName}Service;
+
+    /**
+     * 列表
+     */
+    @RequestMapping("/list")
+    @RequiresPermissions("${moduleName}:${pathName}:list")
+    public R list(@RequestParam Map<String, Object> params) {
+        PageResult page = ${lowerClassName}Service.queryPage(params);
+        return R.ok().put("page", page);
+    }
+
+
+    /**
+     * 信息
+     */
+    @RequestMapping("/info/{${pk.lowerAttrName}}")
+    @RequiresPermissions("${moduleName}:${pathName}:info")
+    public R info(@PathVariable("${pk.lowerAttrName}") ${pk.attrType} ${pk.lowerAttrName}) {
+		${caseClassName}Entity ${lowerClassName} = ${lowerClassName}Service.getById(${pk.lowerAttrName});
+        return R.ok().put("${lowerClassName}", ${lowerClassName});
+    }
+
+    /**
+     * 保存
+     */
+    @RequestMapping("/save")
+    @RequiresPermissions("${moduleName}:${pathName}:save")
+    public R save(@RequestBody ${caseClassName}Entity ${lowerClassName}){
+		${lowerClassName}Service.save(${lowerClassName});
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
+    @RequestMapping("/update")
+    @RequiresPermissions("${moduleName}:${pathName}:update")
+    public R update(@RequestBody ${caseClassName}Entity ${lowerClassName}){
+		${lowerClassName}Service.updateById(${lowerClassName});
+        return R.ok();
+    }
+
+    /**
+     * 删除
+     */
+    @RequestMapping("/delete")
+    @RequiresPermissions("${moduleName}:${pathName}:delete")
+    public R delete(@RequestBody ${pk.attrType}[] ${pk.lowerAttrName}s){
+		${lowerClassName}Service.removeByIds(Arrays.asList(${pk.lowerAttrName}s));
+        return R.ok();
+    }
+
+}

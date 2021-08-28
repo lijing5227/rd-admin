@@ -1,0 +1,47 @@
+package ${package}.${moduleName}.bean.request;
+
+import lombok.Data;
+
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * ${comments} 请求入参
+ *
+ * @author ${author}
+ * @date ${datetime}
+ * @notice 提供此类用于项目封装参考
+ */
+@Data
+public class PageEntityRequest<T> implements Serializable {
+    private static final long serialVersionUID = 1L;
+    /**
+     * 条件查询时用于封装查询条件
+     */
+    private T entity;
+    /**
+     * 从1开始，不传或者传0 默认1
+     */
+    private Integer pageNo;
+    /**
+     * 最大查询500条 不传或者传0 默认500
+     */
+    private Integer pageSize;
+
+    private String appKey;
+
+    public int getPageNo() {
+        if (pageNo == null || pageNo == 0) {
+            return 1;
+        }
+        return pageNo;
+    }
+
+    public int getPageSize() {
+        if (pageSize == null || pageSize > 500 || pageSize == 0) {
+            return 500;
+        }
+        return pageSize;
+    }
+
+}

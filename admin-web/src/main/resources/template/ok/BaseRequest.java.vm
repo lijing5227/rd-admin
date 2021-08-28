@@ -1,0 +1,32 @@
+package ${package}.${moduleName}.bean.request;
+
+import lombok.Data;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
+#if(${hasBigDecimal})
+import java.math.BigDecimal;
+#end
+
+/**
+ * ${comments} 请求入参
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@Data
+public class ${caseClassName}BaseRequest implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+#foreach ($column in $columns)
+    /**
+     * $column.comments
+     */
+    private $column.attrType $column.lowerAttrName;
+#end
+    /**
+     *  id 列表 (其它request请cp 本基础bean 生成根据实际情况修改)
+     */
+    private List<Long> ids;
+}

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <property name="PROJECT_NAME" value="okay-admin"/>
+    <property name="SERVER_NAME" value="web"/>
+    <property name="LOG_HOME" value="/xdfapp/logs/${PROJECT_NAME}"/>
+    <property name="CHARSET" value="UTF-8"/>
+    <property name="PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} %level %class:%line [%thread] [%X{id}] %msg%n"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoder 默认配置为PatternLayoutEncoder -->
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+    </appender>
+
+    <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/${SERVER_NAME}-debug.log</File>
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+        <!-- 只输出level级别以上的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!--日志按天备份-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${SERVER_NAME}-debug.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/${SERVER_NAME}-info.log</File>
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+        <!-- 只输出level级别以上的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <!--日志按天备份-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${SERVER_NAME}-info.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/${SERVER_NAME}-error.log</File>
+        <encoder>
+            <pattern>${PATTERN}</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+        <!-- 只输出level级别以上的日志 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>warn</level>
+        </filter>
+        <!--日志按天备份-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${SERVER_NAME}-error.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="STATICS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${LOG_HOME}/${SERVER_NAME}-statistics.log</File>
+        <encoder>
+            <pattern>%msg%n</pattern>
+            <charset>${CHARSET}</charset>
+        </encoder>
+        <!-- 只输出level级别以上的日志 -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+        </filter>
+        <!--日志按天备份-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/${SERVER_NAME}-statistics.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <!--日志文件保留天数-->
+            <MaxHistory>15</MaxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 异步输出 -->
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>256</queueSize>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="INFO"/>
+        <!-- 记录类名以及行号信息（默认不记录，日志显示为?:?） -->
+        <includeCallerData>true</includeCallerData>
+    </appender>
+
+    <logger name="${PROJECT_NAME}-statics" level="INFO" additivity="false">
+        <appender-ref ref="STATICS"/>
+    </logger>
+    <!--类或者包的日志输出限制-->
+    <logger name="org.springframework" level="INFO"/>
+    <logger name="org.springframework.aop" level="WARN"/>
+    <logger name="org.apache.httpclient.wire" level="WARN"/>
+    <logger name="org.apache.commons.httpclient" level="INFO"/>
+    <logger name="org.apache.zookeeper" level="WARN"/>
+    <logger name="org.apache.http" level="WARN"/>
+    <logger name="org.apache.velocity" level="WARN"/>
+    <logger name="org.mybatis.spring" level="WARN"/>
+    <logger name="org.mybatis" level="WARN"/>
+    <logger name="org.apache.ibatis" level="WARN"/>
+    <logger name="com.github.miemiedev" level="WARN"/>
+    <logger name="org.hibernate" level="WARN"/>
+    <logger name="org.apache.skywalking" level="WARN"/>
+    <logger name="org.eclipse.jetty" level="OFF"/>
+    <logger name="org.apache.dubbo" level="WARN"/>
+    <logger name="org.apache.skywalking.apm" level="OFF"/>
+    <logger name="org.apache.zookeeper.ClientCnxn$SendThread" level="ERROR"/>
+    <logger name="springfox.documentation" level="OFF"/>
+
+    <root level="DEBUG">
+        <appender-ref ref="DEBUG"/>
+        <appender-ref ref="ASYNC"/>
+        <appender-ref ref="ERROR"/>
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

@@ -1,0 +1,124 @@
+package ${package}.${moduleName}.mapper;
+
+import ${package}.${moduleName}.entity.${caseClassName};
+import ${package}.${moduleName}.entity.${caseClassName}PageEntity;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @date ${datetime}
+ * @notice 使用repository注解，请在项目配置类中将Mapper所在路径加入包扫描
+ */
+@Repository
+public interface ${caseClassName}Mapper {
+    /**
+     * 保存${comments}数据
+     * @param entity
+     * @return
+     */
+    int insert(${caseClassName} entity);
+
+    /**
+     * 批量保存${comments}数据
+     * @param entities
+     * @return
+     */
+    int insertList(List<${caseClassName}> entities);
+
+    /**
+     * 保存${comments}数据
+     * @param entity
+     * @return
+     */
+    int insertSetId(${caseClassName} entity);
+
+    /**
+     * 选择保存${comments}数据
+     * @param entity
+     * @return
+     */
+    int insertSelective(${caseClassName} entity);
+
+    /**
+     * 删除${comments}数据
+     * @param entity
+     * @return
+     */
+    int delete(${caseClassName} entity);
+
+    /**
+     * 删除${comments}数据
+     * @param entity
+     * @return
+     */
+    int deleteByParam(${caseClassName} entity);
+
+    /**
+     * 通过id批量删除
+     * @param ids
+     * @return
+     */
+    int deleteByIds(List<Long> ids);
+
+    /**
+     * 更新${comments}数据
+     * @param entity
+     * @return
+     */
+    int update(${caseClassName} entity);
+
+    /**
+     * 批量更新${comments}数据
+     * @param entities
+     * @return
+     */
+    int updateList(List<${caseClassName}> entities);
+
+    /**
+     * 根据条件查询${comments}数据
+     * @param entity
+     * @return
+     */
+    int select(${caseClassName} entity);
+
+    /**
+     * 查询满足条件${comments}数据数量
+     * @param entity
+     * @return
+     */
+    int findCount(${caseClassName}PageEntity entity);
+
+    /**
+     * 根据id查询${comments}数据
+     * @param id
+     * @return
+     */
+        ${caseClassName} load(Long id);
+
+    /**
+     * 根据条件查询单个${comments}数据
+     * @param entity
+     * @return
+     */
+        ${caseClassName} loadByParam(${caseClassName} entity);
+
+    /**
+     * 根据条件查询多个${comments}数据
+     * @param entity
+     * @return
+     */
+    List<${caseClassName}> listByParam(${caseClassName} entity);
+
+    /**
+     * 根据条件查询多个${comments}数据（支持分页）
+     * @param pageEntity
+     * @return
+     * @notice 支持分页原因：规避某些业务场景查询数据量过大
+     */
+    List<${caseClassName}> find(${caseClassName}PageEntity pageEntity);
+
+}

@@ -1,0 +1,79 @@
+package ${package}.${moduleName}.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import ${package}.${moduleName}.service.${caseClassName}Service;
+import com.noriental.validate.bean.CommonResponse;
+import com.noriental.user.center.bean.request.RequestEntity;
+import com.noriental.user.center.api.module.common.PageEntityRequest;
+import com.noriental.user.center.api.module.common.PageEntityResponse;
+import ${package}.${moduleName}.bean.request.${caseClassName}BaseRequest;
+import ${package}.${moduleName}.bean.response.${caseClassName}BaseResponse;
+import javax.validation.Valid;
+import java.util.List;
+
+/**
+ * ${comments}
+ *
+ * @author ${author}
+ * @date ${datetime}
+ */
+@RestController
+@RequestMapping("${moduleName}/${pathName}")
+public class ${caseClassName}Controller {
+    @Autowired
+    private ${caseClassName}Service ${lowerClassName}Service;
+
+    /**
+     *  分页列表
+     */
+    @PostMapping("/pageList")
+    public CommonResponse<PageEntityResponse<${caseClassName}BaseResponse>> pageList(PageEntityRequest<${caseClassName}BaseRequest> pageRequest) {
+        return ${lowerClassName}Service.pageList(pageRequest);
+    }
+
+    /**
+     *  保存
+     */
+    @PostMapping("save")
+    public CommonResponse<Boolean> save(@Valid @RequestBody RequestEntity<${caseClassName}BaseRequest> request) {
+        return ${lowerClassName}Service.save(request.getEntity());
+    }
+
+    /**
+     *  批量保存
+     */
+    @PostMapping("batchSave")
+    public CommonResponse<Boolean> batchSave(@Valid @RequestBody RequestEntity<List<${caseClassName}BaseRequest>> request) {
+        return ${lowerClassName}Service.batchSave(request.getEntity());
+    }
+
+    /**
+     *  删除
+     */
+    @PostMapping("delete")
+    public CommonResponse<Boolean> delete(@Valid @RequestBody RequestEntity<${caseClassName}BaseRequest> request) {
+        return ${lowerClassName}Service.delete(request.getEntity());
+    }
+
+    /**
+     *  更新
+     */
+    @PostMapping("update")
+    public CommonResponse<Boolean> update(@Valid @RequestBody RequestEntity<${caseClassName}BaseRequest> request) {
+        return ${lowerClassName}Service.update(request.getEntity());
+    }
+
+    /**
+     *  查找
+     */
+    @PostMapping("find")
+    public CommonResponse<List<${caseClassName}BaseResponse>> find(@Valid @RequestBody RequestEntity<${caseClassName}BaseRequest> request) {
+        return ${lowerClassName}Service.find(request.getEntity());
+    }
+
+}
